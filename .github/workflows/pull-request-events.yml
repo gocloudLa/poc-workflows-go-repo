@@ -1,0 +1,19 @@
+name: "Pull Request Events Workflow"
+
+on:
+  pull_request:
+    branches: [develop, main]
+    types: [opened, edited, reopened, synchronize, ready_for_review]
+
+permissions:
+  pull-requests: write
+  id-token: write
+  contents: read
+
+jobs:
+  pull-request-events:
+    uses: gocloudLa/poc-workflows-shared/.github/workflows/shared-pull-request-events.yml@main
+    with:
+      language: go
+    secrets: inherit
+

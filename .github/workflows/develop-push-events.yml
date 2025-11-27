@@ -1,0 +1,22 @@
+name: "Develop Push Events Workflow"
+
+on:
+  push:
+    branches: [develop]
+
+permissions:
+  pull-requests: write
+  id-token: write
+  contents: read
+
+jobs:
+  develop-push-events:
+    uses: gocloudLa/poc-workflows-shared/.github/workflows/shared-develop-push-events.yml@main
+    with:
+      ecr_repository_url: ${{ secrets.ECR_REPOSITORY_URL }}
+      aws_role_arn_shared: ${{ secrets.AWS_ROLE_ARN_SHARED }}
+      aws_role_arn_dev: ${{ secrets.AWS_ROLE_ARN_DEV }}
+      aws_region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+      service_name: go-service
+    secrets: inherit
+

@@ -1,0 +1,23 @@
+name: "Main Push Events Workflow"
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  pull-requests: write
+  id-token: write
+  contents: write
+
+jobs:
+  main-push-events:
+    uses: gocloudLa/poc-workflows-shared/.github/workflows/shared-main-push-events.yml@main
+    with:
+      ecr_repository_url: ${{ secrets.ECR_REPOSITORY_URL }}
+      aws_role_arn_shared: ${{ secrets.AWS_ROLE_ARN_SHARED }}
+      aws_role_arn_staging: ${{ secrets.AWS_ROLE_ARN_STAGING }}
+      aws_role_arn_prod: ${{ secrets.AWS_ROLE_ARN_PROD }}
+      aws_region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+      service_name: go-service
+    secrets: inherit
+
