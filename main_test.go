@@ -65,4 +65,3 @@ func TestMultiply(t *testing.T) {
 		})
 	}
 }
-
