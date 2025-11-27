@@ -10,14 +10,27 @@ permissions:
   contents: write
 
 jobs:
-  main-push-events:
-    uses: gocloudLa/poc-workflows-shared/.github/workflows/shared-main-push-events.yml@main
-    with:
+  prepare-secrets:
+    runs-on: ubuntu-latest
+    outputs:
       ecr_repository_url: ${{ secrets.ECR_REPOSITORY_URL }}
       aws_role_arn_shared: ${{ secrets.AWS_ROLE_ARN_SHARED }}
       aws_role_arn_staging: ${{ secrets.AWS_ROLE_ARN_STAGING }}
       aws_role_arn_prod: ${{ secrets.AWS_ROLE_ARN_PROD }}
-      aws_region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+      aws_region: ${{ secrets.AWS_REGION != '' && secrets.AWS_REGION || 'us-east-1' }}
+    steps:
+      - name: Prepare secrets
+        run: echo "Secrets prepared"
+
+  main-push-events:
+    needs: prepare-secrets
+    uses: gocloudLa/poc-workflows-shared/.github/workflows/shared-main-push-events.yml@main
+    with:
+      ecr_repository_url: ${{ needs.prepare-secrets.outputs.ecr_repository_url }}
+      aws_role_arn_shared: ${{ needs.prepare-secrets.outputs.aws_role_arn_shared }}
+      aws_role_arn_staging: ${{ needs.prepare-secrets.outputs.aws_role_arn_staging }}
+      aws_role_arn_prod: ${{ needs.prepare-secrets.outputs.aws_role_arn_prod }}
+      aws_region: ${{ needs.prepare-secrets.outputs.aws_region }}
       service_name: go-service
     secrets: inherit
 

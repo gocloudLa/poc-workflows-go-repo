@@ -9,6 +9,8 @@ permissions:
   pull-requests: write
   id-token: write
   contents: read
+  actions: read
+  security-events: write
 
 jobs:
   pull-request-events:
